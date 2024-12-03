@@ -1,0 +1,40 @@
+High Level Architecture
+                                                                                                                                           -------> User Management using DB
+                | |   | |  | |   | |                                                                                                      |
+                | |   | |  | |   | |                                  ------> Authentication Provider 1       ----> UserDetailsService----- ------> User Management using InMemory
+ Http Request   | |   | |  | |   | |                      (Delegates) |                                       |      (or Custom impl)      |
+ -------------  | |   | |  | |   | |--- Authentication Manager ------ -------> Authentication Provide K -----                               --------> User Management using other way
+                | |   | |  | |   | |                                  |                                       |
+                | |   | |  | |   | |                                  -------> Authentication Provide N       -----> Password Encoder
+                | |   | |  | |   | |
+
+                Filter Chain
+
+
+Custom Authentication:
+
+Although for most of the use cases we don't have to provide any custom authentication way. There are several mechanisms
+offered by Spring. Commonly used are:
+1) Http Basic
+2) Open ID Connect
+3) OAuth2
+4) Certification Authentication Style
+
+Default Behaviour in Spring Boot:
+In Spring Boot by default for authentication we are relying on http login form and http basic filter.
+
+In this step we will make our own custom Authentication Filter.
+
+Authentication Mechanism: For our custom authentication mechanism, we will see if an api key in the http request has the
+secret key as defined in our server then that request will be successful else login request will be failed.
+
+For Creating custom Authentication Filter we haven't relied on Filter interface because:
+When we rely on Filter interface(implements filter) then we don't necessarily know that our custom filter will be called
+only once. In Filter Chain there is no guarantee that the filter will be called only once so if we want that custom
+filter should be called only once then we should use OncePerRequestFilter.
+
+If you use "extends AbstractAuthenticationToken" instead of "implements Authentication", you won't have so many @Override.
+
+Request -> Spawns up a new Thread -> Security Context is per Thread per Request. Internally it uses Thread Local.
+
+Reference: check config package and CustomAuthenticationFilter, CustomAuthenticationManager and Provider there.

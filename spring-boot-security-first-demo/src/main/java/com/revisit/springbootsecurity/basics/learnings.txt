@@ -1,0 +1,62 @@
+Spring Boot comes with Auto-Configuration so for basic projects we just have to provide config for:
+1) UserDetailsService: Which user manager we want to configure. InMemoryUserDetailsManager, JDBC or custom user manager
+2) PasswordEncoder: We have to provide the type of encoder that we want framework to pick.
+
+If we don't provide UserDetailsManager configuration then:
+Spring will create a default user with a default password(which will change on application startup everytime)
+
+Encryption vs Encoding vs Hash Functions
+
+Key Differences Between Encryption and Encoding:
+Primary Goal for Encryption:
+Confidentiality — Protect data by making it unreadable to unauthorized parties. Only authorized recipients who possess
+the key can decrypt and read the data.
+
+Primary Goal For Encoding:
+Data Representation — Transform data into a format suitable for transmission or storage. Anyone can decode the data
+encoding is meant for general compatibility or readability.
+
+Encryption is Reversible:
+Reversible — Decryption (with the correct key) restores the original data.
+
+Encoding is Reversible:
+Decoding returns the original data, no key required
+
+Security Purpose for Encryption:
+Secures data — Prevents unauthorized access by making data unreadable without a secret key. Used to protect
+sensitive data like passwords, financial transactions, private messages.
+Requires a secret key to encrypt and decrypt the data.
+Example: Encrypting a message like "Hello" using AES results in unreadable data (e.g., h9v8sdfj9382jdfhs).
+
+Thinking Strategy:
+Think of encryption like locking a box with a key:
+Only you and the recipient with the right key can open the box and see what's inside.
+
+Security Purpose for Encoding:
+No security — Does not provide any confidentiality or protection, just transforms data. Used to encode binary data
+(like files) for safe transmission (e.g., Base64) or to represent characters in a standardized format (e.g., ASCII).
+Does not require a key. The encoding scheme itself defines how to convert the data.
+Example: Encoding "Hello" using Base64 results in SGVsbG8=, a safe-to-transmit version of the data.
+
+Thinking Strategy:
+Think of encoding like putting something in a special envelope:
+It’s just a different way of packing the content to ensure it fits into a specific system (like email or URL).
+Anyone can open the envelope and see what’s inside.
+
+Hash Functions
+Primary Goal:
+To generate a fixed-size output (a hash value or checksum) from an input, such that even small changes to the input
+result in a completely different output.
+Hash functions are primarily used for integrity verification, fingerprinting data, or indexing data in hash tables.
+
+Hash Functions are not Reversible
+Hash functions are one-way functions. Once data is hashed, it cannot be reversed to recover the original input.
+
+Use case: Ensuring data integrity (e.g., verifying if a file has been tampered with), password storage
+(hashing passwords), digital signatures, and more.
+Example:
+Hashing the string "Hello" with the SHA-256 algorithm could yield something like
+2cf24dba5fb0a30e26e83b2ac5b9e29e1b170c6a70c6d9f5a5d4b07d32736c80, (fixed-length hash) and can't be reversed to "Hello."
+
+
+

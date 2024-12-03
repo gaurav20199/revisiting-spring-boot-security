@@ -1,0 +1,52 @@
+Custom User Details Service
+While creating custom user management service we have to make sure that design should be according to spring security
+contracts.
+For eg: If creating custom user service then spring has UserDetailsService and UserDetailsManager, both of
+these class relies on UserDetails instance, we have the flexibility of having any custom logic of our own but for most
+of the interfaces contract we will finally have to convert our entity into UserDetails instance.
+
+Ways to do that:
+1) Making our custom entity implementing the UserDetails interface.
+Problem: If we do that then our entity will have 2 reasons to change:
+ 1.1) Since it's an entity whenever we make any changes to entity it will be changed.
+ 1.2) Since it's implementing Spring's UserDetails interface so if Spring's implementation of UserDetails interface will
+ also impact our custom entity.
+
+2) Using a mapper:
+   Mapping custom user entity to UserDetails and vice versa(can be done through beanUtils and other ways)
+
+3) Decorator Pattern:
+
+
+
+Role vs Authority
+Roles:
+These are usually badge and usually represented by a subject.
+Often used when you need to control access based on broad user categories or responsibilities(e.g.ADMIN,USER,MODERATOR).
+Typically prefixed with ROLE_ (e.g., ROLE_ADMIN)
+Can be used with hasRole (note the ROLE_ prefix)
+
+Authorities:
+These are usually actions and are usually represented by a verb.
+Used when you need more specific control over actions, such as allowing a user to read,write,delete specific resources.
+No prefix convention (e.g., READ_PRIVILEGES)
+Can be used with hasAuthority (no prefix needed)
+
+In a typical application, you might see both roles and authorities used together to define what actions users can
+perform based on their roles and specific permissions they have within those roles. For instance:
+
+Example:
+A user with the role, ROLE_ADMIN might have all authorities (like READ_PRIVILEGES, WRITE_PRIVILEGES, etc.), while a user
+with the role, ROLE_USER might only have the READ_PRIVILEGES authority.
+
+How Spring Security Handles Roles vs. Authorities:
+Spring Security internally treats roles as authorities.
+Both Roles and Authorities follow the same contract GrantedAuthority.
+When you use hasRole('ROLE_ADMIN') in Spring Security, it automatically adds the ROLE_ prefix to the authority check.
+When you use hasAuthority('ADMIN_PRIVILEGE'), Spring Security checks for that specific authority without the ROLE_ prefix.
+
+After Spring 6 we don't need to register the bean of AuthenticationManager.
+
+Use of Fetch mode Type Eager
+Transaction of loadUserByUserName gets closed and only after that spring tries to fetch authorities and because of that
+we will get lazy initialisation exception as the authority is not there in the session anymore.
