@@ -1,12 +1,16 @@
 HELP.md
 target/
 spring-boot-security-first-demo/.mvn/wrapper/maven-wrapper.jar
+spring-boot-security-second-demo/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 .gitattributes
 .spring-boot-security-first-demo/mvn
 spring-boot-security-first-demo/mvnw.cmd
 spring-boot-security-first-demo/mvnw
+spring-boot-security-second-demo/.mvn
+spring-boot-security-second-demo/mvnw.cmd
+spring-boot-security-second-demo/mvnw
 
 ### STS ###
 .apt_generated
@@ -19,6 +23,7 @@ spring-boot-security-first-demo/mvnw
 
 ### IntelliJ IDEA ###
 spring-boot-security-first-demo/.idea
+spring-boot-security-second-demo/.idea
 *.iws
 *.iml
 *.ipr

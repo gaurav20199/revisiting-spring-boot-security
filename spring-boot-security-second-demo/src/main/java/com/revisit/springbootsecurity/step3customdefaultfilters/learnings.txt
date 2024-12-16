@@ -1,0 +1,80 @@
+Order of Filters -> Defined in SecurityWebFiltersOrder
+
+HTTP Status Code
+401-> Stands for Unauthorized-> But this status is returned when authentication gets failed actually
+403-> Forbidden -> This status is returned when authentication is successful but user is not authorized
+
+Possibilities:
+1) Having Multiple Custom Filters
+2) Having Multiple Default Filters
+3) Having Custom and Default Filters
+
+In earlier spring versions, using websecurity config adapter class we could have added the authentication manager in the
+context and could have injected it anywhere in our custom filters. So basically default filter and custom filter is
+using the same authentication manager.
+
+Issues with Extending WebSecurityConfig Adapter
+1) We had to extend that class and it's usually better to have a "HAS-A" relationship rather than extending. It helped
+in decoupling the code.
+2) Since we were extending the WebConfigAdapter and configuring the AuthenticationManager(that will be used all over the
+project) then that means you can have the single security config and all the logic will be written in it.
+
+In Spring 6, the AuthenticationManager is immutable after it's created. In Spring 5, the AuthenticationManager was
+mutable, which made it possible to change its internal state during runtime (e.g., adding authentication providers).
+Now, the configuration of authentication managers is done upfront, and once created, it cannot be modified.
+IMP: Once created, the AuthenticationManager is immutable, meaning you can’t change it after this point.
+So, while you are customizing it during its creation, the resulting AuthenticationManager object is still immutable.
+The immutability applies after the AuthenticationManager has been built, not during the configuration phase.
+
+Does Defining AuthenticationManager as a Bean Override the Existing One?
+Yes, when you define an AuthenticationManager as a bean in Spring Security 6, it replaces the default one.Spring's
+dependency injection will use the bean you define, and it does override the default authentication manager.
+If you don't define an AuthenticationManager bean, Spring will use its default authentication manager based on the
+provided configuration.
+
+Eg: http.getSharedObject(AuthenticationManagerBuilder.class)
+        .inMemoryAuthentication()
+        .withUser("user")
+        .password(passwordEncoder().encode("password"))
+        .roles("USER")
+        .and()
+        .build();
+Here we are overriding the default authentication manager with inmemory one.
+
+IMP:When you configure other settings in HttpSecurity-for example, formLogin(), basicAuth(), etc. —and don't explicitly
+configure your own AuthenticationManager, Spring will use its default AuthenticationManager for authentication.
+
+If you explicitly want to use default authentication manager only then:
+You can inject the AuthenticationConfiguration bean and then call the .getAuthenticationManager() method
+
+Sample snippet for that config:
+@Configuration
+public class SecurityConfig {
+
+    @Autowired
+    private AuthenticationConfiguration authenticationConfiguration;
+
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.formLogin()
+            .and()
+            .authorizeRequests()
+            .anyRequest().authenticated();
+    }
+}
+
+How to create custom filters along with the default filter ??
+
+      Custom Filter----------------Default Filter 1----------------Default Filter 2
+           |                             |                               |
+      Custom Auth Manager                |-------Default Auth Manger------
+           |                                             |
+      Custom Auth Provider                       Default Auth Provider
+
+Problem Statement:
+Suppose we want to build a system that authenticate on the basis of Api Key(Custom Authentication) and HTTP Basic
