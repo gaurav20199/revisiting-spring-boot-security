@@ -1,0 +1,132 @@
+Oauth2 Specification
+1) Not limited to web app and can be applied to mobile app, Desktop app, some other service(acting as client) etc.
+2) Involvement of user is not mandatory in Oauth flow(s)
+
+UseCase(s):
+Multiple apps within same organization
+1) Suppose in an organization we have various systems for employees. Traditional approach is that every system will have
+their own set of credentials. Now it can become cumbersome for the employees to remember the credentials as well as it
+will be cumbersome that all the apps are using their own set of authentication logic.
+Oauth solution:
+Instead of each app managing the user and client, we have a dedicated server for managing the user(Authorization Server).
+
+Flow 1 for oauth(Authorization code)
+                                   ______________ Authorization Server
+                                  |
+User---> Client -------------------
+                                  |________________ Resource Server(backend app api(s)== Resource(s))
+
+Flow 2 for oauth(client credentials)
+Useful when one backend service needs to be authenticated by other backend service. Also, when orchestration platforms
+like Kubernetes needs to call any backend service.
+                       ___________ Authorization Server
+                      |
+Client----------------
+                      |_____________ Resource Server
+
+IMP: Authorization Server responsibility is to authenticate the client and user(if there) and provides the access token
+and providing necessary information such that Resource server can apply authorization over it.
+Authorization is actually occurring at Resource server and not at Authorization server.
+
+How Authorization Server works???
+Suppose you are entering your DLF Office Building and you forget your office id card. Then you will have to go to the
+reception show some identity proof maybe aadhaar card, pan card... and get some access card with limited validity(
+maybe valid for few hours,maybe valid for only one time use) and you can enter the building.
+Authorization Server works in the same way, it gets information about the client and the user(if there) authenticates
+them and then provide the access token. Now that access token may or may not be allowed everywhere, it totally depends
+on the resource server authorization logic. In similar fashion once you get access card from DLF Building you can enter
+the building, but it doesn't mean that you are allowed to go to any office(s) inside that building. You can enter
+limited building premises(most likely your office area)
+
+Grant Types:
+1) Authorization Code (with and without PCKE)
+2) Client Credentials
+3) Refresh Token
+
+1st Flow Details for Authorization code without PCKE
+1) User requests for a specific operation(that requires authentication) on the client. Client redirects user to a login
+page that is being designed by authorization server.If it was designed by the Client then we call it as a password grant
+type(which has been deprecated).
+2)On successful authentication of the user,server redirects the user to a specific url along with the authorization code
+How does Authorization server knows user should be redirected to which url??
+Redirected url is shared by the client.
+Redirected url should be registered with the Authorization server so that client can't send just any url. The url
+sent by client should already be known by the authorization server.
+This means user will always put credentials on the page provided by the server and not on client.
+
+3) Client makes a post request sharing the authorization code received alongside the client details. On successful
+authentication client gets the access token.
+IMP: User credentials and client credentials are totally different.
+In case of oauth with apps like Google, Facebook, Twitter and others login page is provided by these apps itself.
+
+1st Flow Details for Authorization code with PCKE
+Why PCKE is even required??
+On 3rd step, client shares it(s) credentials to the resource server.Now since the credentials are with client and client
+is public there is a chance that the credentials can be stolen. To resolve this issue we use it with PCKE
+1) User requests for a specific operation(that requires authentication) on the client. Client redirects user to a login
+page that is being designed by authorization server. While redirecting client generates a challenger and a verifier.
+Verifier == Random value
+Challenge == Hash value of that random value.
+Using Hash function you can go from input to output, but you can't go from output to input.
+These verifier and challenge is generated every time for every call at run time and is not static.
+
+2) Now Random value(verifier) remains at client and never lefts the client while the challenge has been exposed to user
+and this challenge is passed in the request along with login user details. In request, it is also shared which algo has
+been used for hashing. On successful authentication, client gets the authorization code
+
+3) Once client gets the authorization code, client pass on the verifier value(random value generated before redirecting)
+and share it with server along with auth code. Now authorization server has both auth code, verifier and the challenge.
+Authorization server can generate the hash out of the verifier and can match it with the verifier received in the step 2
+If both are same, authorization server knows that this is the same client which redirected the user to the login page
+and will provide the access token as the response.
+
+Flow 2 Details:
+1)Client call the authorization server along with the client id and secret and received the token from the auth server.
+2) Client can now call the Resource server by using the above token and access the resources as per the authorization.
+
+V. IMP:
+It is very important that we allow only certain resource with the client credentials and not all. Reason being:
+If the system is using both client credentials and authorization code grant type for the resources then the resource
+server will not be able to identify whether the token that is coming from the client has been generated through client
+grant type way or the authorization code grant type way.
+If we have endpoints that allow client credentials we have to ensure that we somehow identify the client, and we make
+sure that only those endpoints can be called through the token which allows client credentials only.
+
+Refresh Token:
+Usually access token should have short life like 15-20 minutes and once they gets expired, user should have to log-in
+again but this approach becomes cumbersome to the user so refresh token comes into play.
+Along with access code, refresh token can also be shared by the authorization server to the client. Once access token
+gets expired, refresh token can be used to generate the access token again(along with new refresh token) and this goes
+on till refresh token gets expired. Once refresh token gets expired then user will have to authenticate again.
+
+Tokens
+They are needed by resource server to apply the authorization rules.Token can be of 2 Types:
+1) Opaque Token: Tokens that don't contain any information inside
+2) Non-Opaque Token : Tokens that contain information inside. JWT is an example of Non-Opaque Token.
+
+If app is using opaque Token then authorization server will have to implement one "/introspection" endpoint.
+When resource server will call the introspection endpoint then resource server will get the information about whether
+the opaque token is valid or not and relevant information about the client and the user. This information can then be
+used by Resource server to apply the authorization rules.
+
+For Non-opaque token, it already has the relevant information inside thus no introspection endpoint call is required in
+this case. Since the Non-opaque token(usually JWT) is signed and resource server will be configured with the key that
+can validate the signature and if it is valid Resource server can directly get the information.
+
+
+Common Info:
+1) One of the primary reasons for utilizing the authorization code grant type is to ensure that user credentials are not
+directly shared with the client application. Instead, the user authenticates solely with the authorization server,
+maintaining a layer of security. However, if we opt to construct our own custom authorization server, the user would
+still need to share their credentials, but this time with the custom authorization server. In essence, we've shifted the
+responsibility from the client to another service, but the underlying concern of safeguarding user credentials remains,
+similar to the issues we aimed to address when avoiding direct sharing with the client.
+The above way is safer as there can only one authorization server and a lot of clients so delegating the responsibility
+to the server makes more sense.
+
+2) You can implement the login page using whatever technologies you wish. But the login page is always provided by the
+authorization server. It doesn't matter how the authorization server provides that. It can use Thymelead, JSF, Vaading,
+or it can implement a FE/BE separation with a FE tool such as React, Angular, Vue and so on. The point is, the login
+page is on the authorization server side and not the client/resource server side.
+
+
