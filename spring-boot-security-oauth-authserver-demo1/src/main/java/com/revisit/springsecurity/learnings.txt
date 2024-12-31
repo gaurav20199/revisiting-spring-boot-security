@@ -1,0 +1,13 @@
+1) AuthorizationServerSettings Bean can be used to configure/ modify the auth server settings like changing the default
+urls and other things
+2) redirect_uri can't have localhost as per specification but if we really want to use it in the redirect_url then we
+can make a custom validator and allow implementation where localhost can be used.
+3) Spring Authorization Server uses NimbusJwtEncoder to encode and sign issued access tokens (In JWT Format)
+4) By Default access tokens are signed using an auto generated RSA Key pair stored in memory.
+
+Common Doubt:
+When using spring authorization server with authorization code grant type, when we send request to authorize with client
+id & redirect uri and scope we get redirected to login page and after login we get redirected to client redirect uri
+and get the code but when we try to repeat the flow we will get the authorization code directly without being redirected
+to login page and this is because that session id is maintained and for that session user has already authenticated so
+user don't have to log-in again
