@@ -129,4 +129,8 @@ authorization server. It doesn't matter how the authorization server provides th
 or it can implement a FE/BE separation with a FE tool such as React, Angular, Vue and so on. The point is, the login
 page is on the authorization server side and not the client/resource server side.
 
+3) The problem with password grant type is that the client knows the users' credentials. You don't want that. You want
+only the user and the authorization server (which manages the credentials) to know those. So that's why it's preferred
+not to use the password grant type.
+
 
