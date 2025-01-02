@@ -125,12 +125,21 @@ The above way is safer as there can only one authorization server and a lot of c
 to the server makes more sense.
 
 2) You can implement the login page using whatever technologies you wish. But the login page is always provided by the
-authorization server. It doesn't matter how the authorization server provides that. It can use Thymelead, JSF, Vaading,
+authorization server. It doesn't matter how the authorization server provides that. It can use Thymeleaf, JSF, Vaading,
 or it can implement a FE/BE separation with a FE tool such as React, Angular, Vue and so on. The point is, the login
 page is on the authorization server side and not the client/resource server side.
 
 3) The problem with password grant type is that the client knows the users' credentials. You don't want that. You want
 only the user and the authorization server (which manages the credentials) to know those. So that's why it's preferred
 not to use the password grant type.
+
+4) Why server should already know about redirect uri(s) we have to pass redirect uri in the oauth2 requests??
+As per specification redirect_uri has to be shared by client and has to be known by server as well. This helps in
+following ways:
+1) If someone changes the redirect uri and if backend didn't already have the information of all the known redirect uri
+then it can cause various security issues.
+2) Server might have to know about multiple redirect uri(s) in the system,so it is a must that client should provide the
+redirect uri and server then can match that uri with the uri(s) available to it and if only both matches then only
+server redirects.
 
 
