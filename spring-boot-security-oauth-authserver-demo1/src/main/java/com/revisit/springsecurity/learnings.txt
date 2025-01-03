@@ -5,6 +5,23 @@ can make a custom validator and allow implementation where localhost can be used
 3) Spring Authorization Server uses NimbusJwtEncoder to encode and sign issued access tokens (In JWT Format)
 4) By Default access tokens are signed using an auto generated RSA Key pair stored in memory.
 
+Non-Opaque Tokens Size??
+Non-Opaque Token such as JWT should generally should not have a lot of information stored as these token will be signed
+by cryptography algorithms and moreover these tokens have to be transferred over the network as well and considering
+stateless protocol we will have to transfer this token many times, and it would be difficult to send it.
+As a good practice, we should have only that info which helps resource server in applying authorization rule using it.
+
+Customizing Non-Opaque Tokens??
+Using OAuth2TokenCustomizer and using non-opaque tokens context(JwtEncodingContext) we can customize any given token.
+
+Customizing Token Settings
+For customizing token we can use token settings, we can set the token expiry date, whether we want opaque token or
+non-opaque tokens and other configuration
+
+Using Opaque Tokens
+If we are using opaque token then resource server will have to use introspect endpoint to get the information.
+It's a post request where we have to provide access token along with client credentials in it.
+
 Common Doubt:
 When using spring authorization server with authorization code grant type, when we send request to authorize with client
 id & redirect uri and scope we get redirected to login page and after login we get redirected to client redirect uri
