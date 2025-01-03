@@ -67,6 +67,13 @@ Basic auth is required in above post request where client username and credentia
 
 Endpoint exposing all the standard openid configurations of any authorization server supporting open id connect
 localhost:8080/.well-known/openid-configuration
+
+curl for introspection endpoint if using opaque tokens
+curl --location 'http://localhost:8080/oauth2/introspect' \
+--header 'Authorization: Basic Y2xpZW50OnNlY3JldA==' \
+--header 'Cookie: JSESSIONID=4FA3AA8CBE5EF2B323406D45E632231B' \
+--form 'token="nu-TZ_0C3EbGlIhfUI7MDp1_eYvi053Cdafh1bhY9wR4lJoWy-S3OfgGnSn0ClKCQOKkDyQj5QGDLCZ9TJ-PPUHnepT5aEPXpW6dGAb-nGiFO-JHg3cDreFnxfEc0T-I"'
+
      */
     @Bean
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity security) throws Exception {
@@ -132,6 +139,7 @@ localhost:8080/.well-known/openid-configuration
         return new InMemoryRegisteredClientRepository(client);
     }
 
+    @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> oAuth2TokenCustomizer() {
         return context -> {
             context.getClaims().claim("dummyKey","dummyValue");
