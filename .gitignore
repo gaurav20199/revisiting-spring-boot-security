@@ -4,6 +4,7 @@ spring-boot-security-first-demo/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-second-demo/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-oauth-theory/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-oauth-authserver-demo1/.mvn/wrapper/maven-wrapper.jar
+spring-boot-security-oauth-authserver-withdb/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 .gitattributes
@@ -19,7 +20,9 @@ spring-boot-security-oauth-theory/mvnw
 spring-boot-security-oauth-authserver-demo1/.mvn
 spring-boot-security-oauth-authserver-demo1/mvnw.cmd
 spring-boot-security-oauth-authserver-demo1/mvnw
-
+spring-boot-security-oauth-authserver-withdb/.mvn
+spring-boot-security-oauth-authserver-withdb/mvnw.cmd
+spring-boot-security-oauth-authserver-withdb/mvnw
 
 ### STS ###
 .apt_generated
@@ -35,6 +38,7 @@ spring-boot-security-first-demo/.idea
 spring-boot-security-second-demo/.idea
 spring-boot-security-oauth-theory/.idea
 spring-boot-security-oauth-authserver-demo/.idea
+spring-boot-security-oauth-authserver-withdb/.idea
 *.iws
 *.iml
 *.ipr
