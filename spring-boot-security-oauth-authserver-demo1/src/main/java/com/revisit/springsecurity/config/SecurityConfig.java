@@ -148,7 +148,7 @@ curl --location 'http://localhost:8080/oauth2/introspect' \
 
     /*
         * If we want to use our own keys and not depend on default we can do customization as well
-        * Only for reference purpose
+        * Only for reference purpose in actual prod apps we most likely will be getting keys from a vault
     @Bean
     public JWKSource<SecurityContext> jwkSource() throws NoSuchAlgorithmException {
         KeyPairGenerator kpGenerator = KeyPairGenerator.getInstance("RSA");
