@@ -1,6 +1,5 @@
 package com.revisit.springsecurity.security.config;
 
-import org.springframework.cglib.proxy.NoOp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.MediaType;
@@ -9,9 +8,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -38,6 +40,13 @@ public class SecurityConfig {
         return http.formLogin(Customizer.withDefaults()).
                 authorizeHttpRequests(customizer -> customizer.anyRequest().authenticated()).
                 build();
+    }
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
+        return context -> {
+            List<String> authorities = context.getPrincipal().getAuthorities().stream().map(grantedAuthority -> grantedAuthority.getAuthority()).toList();
+            context.getClaims().claim("authorities",authorities);
+        };
     }
 
 }

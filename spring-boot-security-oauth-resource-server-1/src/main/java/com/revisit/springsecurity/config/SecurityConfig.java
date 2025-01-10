@@ -17,6 +17,7 @@ public class SecurityConfig {
         security.oauth2ResourceServer(customizer -> {
             customizer.jwt(customizer2 -> {
                 customizer2.jwkSetUri(jwksUri);
+                customizer2.jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter());
             });
         });
 
