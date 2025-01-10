@@ -96,6 +96,7 @@ public class Client {
                 clientSecret(client.getSecret()).
                 clientAuthenticationMethod(new ClientAuthenticationMethod(client.getAuthMethod())).
                 authorizationGrantType(new AuthorizationGrantType(client.getGrantType())).
+                //tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build()).
                 redirectUri(client.getRedirectUri()).build();
 
     }

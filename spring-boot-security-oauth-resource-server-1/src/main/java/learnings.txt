@@ -63,3 +63,7 @@ In general JWTAuthenticationToken extends AbstractOAuth2TokenAuthenticationToken
 AbstractAuthenticationToken and that further implements Authentication interface.
 
 oauth2ResourceServer() is exposed to be used in conjunction with HttpSecurity Object and makes an app a resource server.
+
+Opaque Tokens
+Since Opaque tokens don't have any information, so we can't directly verify them whether they are valid or not.
+Opaque tokens always works with introspection endpoint and credentials(using basic auth for client credentials)

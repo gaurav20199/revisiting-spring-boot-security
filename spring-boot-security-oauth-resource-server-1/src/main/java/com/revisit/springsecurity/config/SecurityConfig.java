@@ -19,6 +19,11 @@ public class SecurityConfig {
                 customizer2.jwkSetUri(jwksUri);
                 customizer2.jwtAuthenticationConverter(new CustomJwtAuthenticationTokenConverter());
             });
+//            customizer.opaqueToken(customizer2 -> {
+//                customizer2.introspectionUri("http://localhost:8080/oauth2/introspect").
+//                        introspectionClientCredentials("client","secret");
+//            });
+
         });
 
         return security.formLogin(Customizer.withDefaults()).
