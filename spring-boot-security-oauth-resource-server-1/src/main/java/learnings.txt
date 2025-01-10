@@ -35,8 +35,31 @@ allowed to do within a given context
 
 How Token is getting verified in Resource Server??
 It is done by default. Spring converts the JWT Token details inside the Authentication object and put it in the Security
-Context. By Default authorities has client scopes and not actual authorities of the user. If we want then we have to
-write our own custom JWTTokenConverter that will populate the details from JWT to Authentication object.
+Context. By Default authorities has client scopes and not actual authorities of the user. If we want then we can use
+Token Customizer.
 
+Adding Authority inside a token??
+By Default authority is not present inside a token. This is because oauth has multiple flows and some flow might don't
+even require a user so question for authorities doesn't even come into play. So if our flow is like that where user and
+authorities is involved then we can provide Token Customizer(will be used on auth server side).
+
+Handling Authorities in Resource Server??
+Authorities information are present in the jwt token got from the authorization server. Now there can be multiple ways:
+1) Getting claims from the tokens and looking for authorities inside it and then doing the authorization based on it.
+2) Getting authorities out of the JWT Token and put it in the Authentication Token object itself so that the
+authorization rules are simplified.
+
+IMP:
+By Default the Authentication Token Object will not store the authorities of the user, and it will store client scopes.
+This is an assumption, but it might be because client is mandatory in the oauth2 flows while a user might or might not
+be part of the flow. So we can override the authorities in the case if we get the authorities from the JWT Token.
+
+Why 2nd way is better for Handling Authorities in Resource Server???
+It makes applying Authorization rules easier. Most importantly Authentication Token object should ideally contain
+authorities of the user(if applicable) so it's better to override client scopes present inside Authentication Token
+object(by default) to authorities from the JWT Token.
+
+In general JWTAuthenticationToken extends AbstractOAuth2TokenAuthenticationToken which further extends
+AbstractAuthenticationToken and that further implements Authentication interface.
 
 oauth2ResourceServer() is exposed to be used in conjunction with HttpSecurity Object and makes an app a resource server.

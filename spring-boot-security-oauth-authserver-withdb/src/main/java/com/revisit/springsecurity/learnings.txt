@@ -1,0 +1,3 @@
+By Default authority is not present inside a token. This is because oauth has multiple flows and some flow might don't
+even require a user so question for authorities doesn't even come into play. So if our flow is like that where user and
+authorities is involved then we can use Token Customizer.
