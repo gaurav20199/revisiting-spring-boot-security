@@ -1,0 +1,42 @@
+Is there any need to include spring security dependency when using oauth resource server dependency??
+No, since oauth resource server dependency transitively includes the spring security dependency as well.
+
+JWT Token is exposed to the client then how is it safe??
+Although JWT is exposed to the client and client can even see the headers and body present in the JWT but since any
+given JWT has signature and the resource server(backend) will verify that signature it won't be a security issue.
+Any change in headers/body of the JWT will result in the change in the signature and hence while verifying the token it
+will easily be seen.
+
+From where we can get the jwks uri??
+Jwks uri can be fetched from the openid-configuration public url localhost:8080/.well-known/openid-configuration
+In this url you will get jwks uri which will be http://localhost:8080/oauth2/jwks
+
+What does jwks uri even provides us with??
+Jwks uri provides us the public parts of the key pair that has been used to sign the jwt token.
+
+Is it safe that Resource server has access to the jwks uri??
+Yes it is completely safe since jwks uri is simply exposing the public parts of key pair. Public key can only be used in
+validating the token and nothing else.
+
+Why do we have to get public key from the jwks uri, can't we directly configure them in the resource server???
+It is generally complicated to configure private part of the key pair in the Auth server and public part in the Resource
+server. As during key rotation we will have two places where we will have to make the changes.
+Most importantly it breaks the separation of concerns as we will have to handle it at both the places.
+
+Scope vs Authorities
+In OAuth 2.0 and OpenID Connect (OIDC), scope refers to the level of access that the client application is requesting.
+Scopes control what clients can do on behalf of the user with external resources or APIs. Scopes like read and write
+define the permissions the client application is requesting to interact with the user's data.
+A client requests scope=read to retrieve user data from an API (like profile information).
+A client requests scope=write to modify or create new data on the API (like updating the user's profile).
+
+Authorities generally refer to a user's permissions or roles in an application or system. These define what a user is
+allowed to do within a given context
+
+How Token is getting verified in Resource Server??
+It is done by default. Spring converts the JWT Token details inside the Authentication object and put it in the Security
+Context. By Default authorities has client scopes and not actual authorities of the user. If we want then we have to
+write our own custom JWTTokenConverter that will populate the details from JWT to Authentication object.
+
+
+oauth2ResourceServer() is exposed to be used in conjunction with HttpSecurity Object and makes an app a resource server.
