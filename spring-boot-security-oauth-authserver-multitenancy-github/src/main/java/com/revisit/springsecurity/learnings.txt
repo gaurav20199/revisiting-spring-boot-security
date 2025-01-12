@@ -1,0 +1,20 @@
+Multitenancy
+When we have multiple authorization servers we refer it as multi-tenant system.
+There are use-cases when we have to give flexibility to the user to login using other systems like LinkedIn, GitHub,
+Gmail etc.
+
+Flow would be like this here:
+1) Client will redirect the user to the right authorization server.
+2) Considering it would be an Authorization code grant type and that user will be present then Auth server will share
+the login page.
+3) User will put the credentials in the login page and credentials will be authenticated.
+4) Once it is authenticated, auth server will redirect to the redirect_uri shared by client(and known by server as well)
+along with sharing the access code.
+5) Once client gets the access code, client can request for access token by providing right client credentials along
+with other details and access code.
+6) If all the information in the request is correct then auth server will provide the client with a token.
+
+Scenarios If there are 2 Auth servers involved.
+1) Both Auth servers can give opaque token.
+2) Both Auth servers can give Non-opaque token like JWT
+3) One Auth Server will have opaque token and other one will have non-opaque token.

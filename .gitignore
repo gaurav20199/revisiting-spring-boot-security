@@ -6,6 +6,9 @@ spring-boot-security-oauth-theory/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-oauth-authserver-demo1/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-oauth-authserver-withdb/.mvn/wrapper/maven-wrapper.jar
 spring-boot-security-oauth-resource-server-1/.mvn/wrapper/maven-wrapper.jar
+spring-boot-security-oauth-authserver-multitenancy-linkedin/.mvn/wrapper/maven-wrapper.jar
+spring-boot-security-oauth-authserver-multitenancy-github/.mvn/wrapper/maven-wrapper.jar
+spring-boot-security-oauth-resource-server-multitenancy/.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 .gitattributes
@@ -27,6 +30,16 @@ spring-boot-security-oauth-authserver-withdb/mvnw
 spring-boot-security-oauth-resource-server-1/.mvn
 spring-boot-security-oauth-resource-server-1/mvnw.cmd
 spring-boot-security-oauth-resource-server-1/mvnw
+spring-boot-security-oauth-resource-server-multitenancy/.mvn
+spring-boot-security-oauth-resource-server-multitenancy/mvnw.cmd
+spring-boot-security-oauth-resource-server-multitenancy/mvnw
+spring-boot-security-oauth-authserver-multitenancy-linkedin/.mvn
+spring-boot-security-oauth-authserver-multitenancy-linkedin/mvnw.cmd
+spring-boot-security-oauth-authserver-multitenancy-linkedin/mvnw
+spring-boot-security-oauth-authserver-multitenancy-github/.mvn
+spring-boot-security-oauth-authserver-multitenancy-github/mvnw.cmd
+spring-boot-security-oauth-authserver-multitenancy-github/mvnw
+
 
 ### STS ###
 .apt_generated
@@ -44,6 +57,9 @@ spring-boot-security-oauth-theory/.idea
 spring-boot-security-oauth-authserver-demo/.idea
 spring-boot-security-oauth-authserver-withdb/.idea
 spring-boot-security-oauth-resource-server-1/.idea
+spring-boot-security-oauth-authserver-multitenancy-linkedin/.idea
+spring-boot-security-oauth-authserver-multitenancy-github/.idea
+spring-boot-security-oauth-resource-server-multitenancy/.idea
 *.iws
 *.iml
 *.ipr

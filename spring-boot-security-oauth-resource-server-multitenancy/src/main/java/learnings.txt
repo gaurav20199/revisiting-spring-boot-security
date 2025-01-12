@@ -1,0 +1,3 @@
+If we don't provide resource server that we are going to use JWT Token or opaque token then we get this error
+Caused by: java.lang.IllegalStateException: Jwt and Opaque Token are the only supported formats for bearer tokens in
+Spring Security and neither was found. Make sure to configure JWT via http.oauth2ResourceServer().jwt() or Opaque Tokens via http.oauth2ResourceServer().opaqueToken().
