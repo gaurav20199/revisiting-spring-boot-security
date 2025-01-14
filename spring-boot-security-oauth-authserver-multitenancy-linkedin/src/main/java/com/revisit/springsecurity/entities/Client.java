@@ -7,6 +7,8 @@ import jakarta.persistence.Id;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 @Entity
 public class Client {
@@ -96,7 +98,7 @@ public class Client {
                 clientSecret(client.getSecret()).
                 clientAuthenticationMethod(new ClientAuthenticationMethod(client.getAuthMethod())).
                 authorizationGrantType(new AuthorizationGrantType(client.getGrantType())).
-                //tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build()).
+                tokenSettings(TokenSettings.builder().accessTokenFormat(OAuth2TokenFormat.REFERENCE).build()).
                 redirectUri(client.getRedirectUri()).build();
 
     }
